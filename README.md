@@ -16,19 +16,6 @@ Real-time ML interview feedback powered by Claude API. Covers ML Engineer and Da
 
 ---
 
-## 🚀 How to Run
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git
-cd Ai-interview-Coach
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Run the Streamlit dashboard
-python -m streamlit run app.py
-
 💡 What I Learned
 LLM Evaluation Matrix: How to build strict system prompts forcing models to output parseable structural JSON data.
 State Preservation: Handling active interview data and history navigation loops smoothly utilizing Streamlit session states.
@@ -42,3 +29,18 @@ Ai-interview-Coach/
 ├── requirements.txt     # List of external Python packages to install
 ├── .gitignore           # Tells Git which files/folders to hide or ignore
 └── README.md            # Project documentation and setup instructions
+
+## 🚀 How to Run
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git
+cd Ai-interview-Coach
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the Streamlit dashboard
+python -m streamlit run app.py
+
+
