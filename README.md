@@ -30,9 +30,8 @@ Ai-interview-Coach/
 ├── requirements.txt     # List of external Python packages to install
 ├── .gitignore           # Tells Git which files/folders to hide or ignore
 └── README.md            # Project documentation and setup instructions
-## 🚀 How to Run
 
-```bash
+
 # 1. Clone the repository
 git clone https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git
 cd Ai-interview-Coach
