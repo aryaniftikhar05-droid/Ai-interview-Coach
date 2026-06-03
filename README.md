@@ -1,45 +1,69 @@
-# 🎯 AI Interview Coach
+🎯 AI Interview Coach
+An AI-powered interview simulation system that evaluates Machine Learning and Data Science interview responses in real time using Claude 3.5 Sonnet.
+The system provides structured scoring, behavioural feedback, and performance tracking across sessions.
+🚀 Problem It Solves
+Most candidates practice interviews without structured feedback or measurable improvement.
+This system replicates a real technical interview loop:
 
-Real-time ML interview feedback powered by Claude API. Covers ML Engineer and Data Scientist roles across technical, system design, and behavioural questions.
-
-## 📺 What It Does
-* **Random Question Generator:** Pulls from a bank of 30+ realistic tech industry interview questions.
-* **Granular Evaluation:** Claude 3.5 Sonnet evaluates answers on Structure, Depth, Examples, and Communication.
-* **Actionable Feedback:** Outputs a definitive Hire/No-Hire decision accompanied by a critical gap analysis.
-* **Performance Dashboard:** Tracks historical scoring improvement over time using persistent session states.
-
-## 🛠️ Built With
-* **Python 3.10+** — Core programming language
-* **Streamlit** — Frontend dashboard UI implementation
-* **Anthropic Claude API** — LLM evaluation layer
-* **Requests** — Synchronous endpoint handling
-
----
-
-💡 What I Learned
-LLM Evaluation Matrix: How to build strict system prompts forcing models to output parseable structural JSON data.
-State Preservation: Handling active interview data and history navigation loops smoothly utilizing Streamlit session states.
-API Secret Isolation: Safeguarding operational credentials securely via cloud environment variables to prevent accidental code leaks.
-UI Customization: Overriding boilerplate library layouts with targeted HTML style embeddings for custom visual dashboard cues.
-
-## 📁 Repository Structure
-
-```text
+Ask realistic industry-level questions
+Evaluate answers using an LLM-based scoring rubric
+Provide strict hiring-style decisions (Hire / No Hire)
+Track performance over time
+⚙️ System Architecture
+User Input (Answer)
+        ↓
+Streamlit UI (Frontend)
+        ↓
+Claude 3.5 Sonnet (Evaluation Engine)
+        ↓
+Structured JSON Scoring Output
+        ↓
+Feedback + Decision Layer
+        ↓
+Session State Storage (Progress Tracking)
+🧠 Core Features
+🎯 Interview Question Engine (30+ ML + DS questions)
+🧾 Structured LLM Evaluation (rubric-based scoring)
+📊 Hire / No-Hire decision system
+📈 Performance tracking across sessions
+🧠 Behavioural + technical feedback breakdown
+💾 Persistent session state using Streamlit
+🛠️ Tech Stack
+Python 3.10+
+Streamlit (UI layer)
+Anthropic Claude 3.5 Sonnet (LLM evaluation)
+Requests (API handling)
+📁 Project Structure
 Ai-interview-Coach/
-├── app.py               # The main application script (Streamlit app)
-├── requirements.txt     # List of external Python packages to install
-├── .gitignore           # Tells Git which files/folders to hide or ignore
-└── README.md            # Project documentation and setup instructions
-
-
-# 1. Clone the repository
+├── app.py
+├── requirements.txt
+├── .gitignore
+└── README.md
+🚀 How to Run
 git clone https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git
 cd Ai-interview-Coach
-
-# 2. Install dependencies
 pip install -r requirements.txt
-
-# 3. Run the Streamlit dashboard
 python -m streamlit run app.py
+🧠 Key Engineering Design Decisions
+Used structured prompting to force deterministic evaluation output
+Implemented session-based memory for interview tracking
+Designed a rubric scoring system (structure, depth, clarity, examples)
+Isolated API keys using environment variables for security
+Built a lightweight frontend using Streamlit instead of heavy frameworks
+📊 Why This Project Matters
+This is not just a Q&A bot.
+It simulates an interview loop with:
+
+Consistent evaluation logic
+Repeatable scoring framework
+Progress tracking over time
+It demonstrates applied understanding of:
+LLM orchestration
+Evaluation system design
+Lightweight full-stack AI applications
+👤 Author
+Aryan Iftikhar
+BSc Computer Science | Keele University
+Aspiring AI / ML Engineer
 
 
