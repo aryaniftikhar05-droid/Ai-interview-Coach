@@ -1,69 +1,74 @@
-🎯 AI Interview Coach
-An AI-powered interview simulation system that evaluates Machine Learning and Data Science interview responses in real time using Claude 3.5 Sonnet.
-The system provides structured scoring, behavioural feedback, and performance tracking across sessions.
-🚀 Problem It Solves
-Most candidates practice interviews without structured feedback or measurable improvement.
-This system replicates a real technical interview loop:
+# 🎯 AI Interview Coach
 
-Ask realistic industry-level questions
-Evaluate answers using an LLM-based scoring rubric
-Provide strict hiring-style decisions (Hire / No Hire)
-Track performance over time
-⚙️ System Architecture
-User Input (Answer)
-        ↓
-Streamlit UI (Frontend)
-        ↓
-Claude 3.5 Sonnet (Evaluation Engine)
-        ↓
-Structured JSON Scoring Output
-        ↓
-Feedback + Decision Layer
-        ↓
-Session State Storage (Progress Tracking)
-🧠 Core Features
-🎯 Interview Question Engine (30+ ML + DS questions)
-🧾 Structured LLM Evaluation (rubric-based scoring)
-📊 Hire / No-Hire decision system
-📈 Performance tracking across sessions
-🧠 Behavioural + technical feedback breakdown
-💾 Persistent session state using Streamlit
-🛠️ Tech Stack
-Python 3.10+
-Streamlit (UI layer)
-Anthropic Claude 3.5 Sonnet (LLM evaluation)
-Requests (API handling)
-📁 Project Structure
+A reproducible, production-ready Streamlit application powered by Claude 3.5 Sonnet to simulate senior-level technical, system design, and behavioral interviews — built as a professional portfolio development asset.
+   
+📌 Project Overview
+
+Most technical candidates fail machine learning and data science interview loops not due to a lack of core technical theory, but because they struggle to articulate complex concepts structurally under pressure. 
+
+This application provides an end-to-end simulated mock interview dashboard. It prompts the user with curated, high-frequency industry questions and runs comprehensive real-time evaluations across standard engineering competency metrics. By processing input text via strict prompt-engineered grading matrices, it outputs an instant scorecard, a definitive hiring decision, an explicit critique of critical gaps, and target model-answer hints.
+
+🗂️ Repository Structure
+
 Ai-interview-Coach/
-├── app.py
-├── requirements.txt
-├── .gitignore
-└── README.md
-🚀 How to Run
-git clone https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git
-cd Ai-interview-Coach
-pip install -r requirements.txt
-python -m streamlit run app.py
-🧠 Key Engineering Design Decisions
-Used structured prompting to force deterministic evaluation output
-Implemented session-based memory for interview tracking
-Designed a rubric scoring system (structure, depth, clarity, examples)
-Isolated API keys using environment variables for security
-Built a lightweight frontend using Streamlit instead of heavy frameworks
-📊 Why This Project Matters
-This is not just a Q&A bot.
-It simulates an interview loop with:
+│
+├── .streamlit/
+│   └── secrets.toml             ← Local API credentials configuration (git-ignored)
+│
+├── app.py                       ← Main Streamlit application and UI layout engine
+├── requirements.txt             ← Python library production dependencies
+└── README.md                    ← Interactive documentation and setup playbook
 
-Consistent evaluation logic
-Repeatable scoring framework
-Progress tracking over time
-It demonstrates applied understanding of:
-LLM orchestration
-Evaluation system design
-Lightweight full-stack AI applications
-👤 Author
-Aryan Iftikhar
-BSc Computer Science | Keele University
-Aspiring AI / ML Engineer
+🔍 Evaluation Criteria & Grading Matrix
+
+CompetencyWeightAssessment FocusTarget Rubric Standard**Structure**25%Logical conversational flow (STAR framework / problem context → solution design)Linear, clear, scannable delivery**Depth**30%Technical accuracy, architectural viability, framework knowledgeDeep domain-specific trade-off analysis**Examples**25%Integration of concrete metrics, production constraints, or hard numbersData-backed claim validation**Communication**20%Brevity, concise phrasing, vocabulary precision, conceptual clarityC-level executive level crispness
+⚙️ Application Architecture Pipeline
+
+1. Select Role      → Choose target discipline (ML Engineer / Data Scientist) and topic track
+2. Fetch Question   → Extract random, industry-vetted question from internal memory arrays
+3. User Submission  → Capture comprehensive, paragraph-length text response from candidate
+4. Length Guardrail → Validate string counts to block thin or low-effort submissions
+5. JSON Formatting  → Inject responses into strict system prompts demanding raw telemetry objects
+6. API Handshake    → Transmit payload securely to the Anthropic Claude 3.5 Sonnet endpoint
+7. Response Parsing → Strip Markdown fences and extract structural feedback metadata safely
+8. UI Render        → Display conditional, color-coded metric panels and tailored critiques
+9. State Caching    → Persist evaluation metrics to persistent log history arrays
+
+📊 Operational Benchmarks
+
+Track RoleAvailable ModulesTotal Core QuestionsTarget Hire Threshold**ML Engineer**Technical Theory, System Design, Behavioral19 Production QuestionsScore $\ge$ 7.0 / 10**Data Scientist**Technical Theory, Case Study, Behavioral15 Analytics QuestionsScore $\ge$ 7.0 / 10
+
+🛠️ Tools & Technologies
+
+* **Python 3.10+** — core language architecture environment
+* **Streamlit** — dashboard interface framework and interactive state controls
+* **Anthropic Claude API** — (`claude-3-5-sonnet`) underlying analytical validation model
+* **Requests** — client-server network protocol communication handler
+
+🚀 How to Run
+
+```bash
+# 1. Clone the repository
+git clone [https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git](https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git)
+cd Ai-interview-Coach
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the Streamlit dashboard
+python -m streamlit run app.py
+
+
+💡 What I Learned
+LLM Evaluation Matrix: Architecting strict system prompts that force models to reliably output parseable, non-hallucinated structural JSON blocks.
+State Preservation: Leveraging temporary cache protocols (session_state) to manage multi-tab execution flow, history retention, and rolling metric aggregations cleanly.
+API Secret Isolation: Isolating production API tokens securely using environment variable injection blocks to prevent accidental exposures on public repositories.
+UI Customization overrides: Embedding custom CSS classes into boilerplate layouts to build professional, sleek dark-themed dashboards.
+
+📁 Application State Schema
+State VariableTypeDescriptionRuntime Scopecurrent_questionstringTracks the currently active interview prompt displayed to the candidateActive interview loop contextcurrent_rolestringIdentifies the active testing career track configurationGlobal runtime execution pathhistorylistNested dictionary logs storing cumulative answers and API feedback payloadsPerformance history visualizationtotal_scorelistFlat integer array storing historical final grades to compute running dashboard metricsAnalytics computation
+
+Author
+Aryan Iftikhar Computer Science Student | Aspiring Machine Learning & Software Engineer
 
 
