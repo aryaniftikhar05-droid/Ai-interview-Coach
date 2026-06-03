@@ -22,14 +22,14 @@ State Preservation: Handling active interview data and history navigation loops 
 API Secret Isolation: Safeguarding operational credentials securely via cloud environment variables to prevent accidental code leaks.
 UI Customization: Overriding boilerplate library layouts with targeted HTML style embeddings for custom visual dashboard cues.
 
-📁 Repository Structure
+## 📁 Repository Structure
 
+```text
 Ai-interview-Coach/
 ├── app.py               # The main application script (Streamlit app)
 ├── requirements.txt     # List of external Python packages to install
 ├── .gitignore           # Tells Git which files/folders to hide or ignore
 └── README.md            # Project documentation and setup instructions
-
 ## 🚀 How to Run
 
 ```bash
