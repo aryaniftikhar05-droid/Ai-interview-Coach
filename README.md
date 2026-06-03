@@ -15,7 +15,6 @@ python3 -m streamlit run app.py
 ```
 # 🎯 AI Interview Coach
 
-Real-time ML interview feedback powered by Claude API. Covers ML Engineer and Data Scientist roles across technical, system design, and behavioural questions.
 
 * **Python 3.10+** — core language
 * **Streamlit** — frontend dashboard UI
@@ -36,3 +35,9 @@ pip install -r requirements.txt
 
 # 3. Run the pipeline dashboard
 python -m streamlit run app.py
+
+What I Learned
+LLM Evaluation Matrix: How to build strict system prompts forcing models to output parseable structural JSON data.
+State Preservation: Handling active interview data and history navigation loops smoothly utilizing Streamlit session states.
+API Secret Isolation: Safeguarding operational credentials securely via cloud environment variables to prevent accidental code leaks.
+UI Customization: Overriding boilerplate library layouts with targeted HTML style embeddings for custom visual dashboard cues.
