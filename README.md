@@ -13,7 +13,7 @@ Real-time ML interview feedback powered by Claude API. Covers ML Engineer and Da
 pip3 install -r requirements.txt
 python3 -m streamlit run app.py
 ```
-# 🎯 AI Interview Coach
+
 
 
 * **Python 3.10+** — core language
@@ -41,3 +41,12 @@ LLM Evaluation Matrix: How to build strict system prompts forcing models to outp
 State Preservation: Handling active interview data and history navigation loops smoothly utilizing Streamlit session states.
 API Secret Isolation: Safeguarding operational credentials securely via cloud environment variables to prevent accidental code leaks.
 UI Customization: Overriding boilerplate library layouts with targeted HTML style embeddings for custom visual dashboard cues.
+
+## 📁 Repository Structure
+
+```text
+Ai-interview-Coach/
+├── app.py               # The main application script (Streamlit app)
+├── requirements.txt     # List of external Python packages to install
+├── .gitignore           # Tells Git which files/folders to hide or ignore
+└── README.md            # Project documentation and setup instructions
