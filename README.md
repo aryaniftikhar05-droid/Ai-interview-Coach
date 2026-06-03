@@ -13,3 +13,26 @@ Real-time ML interview feedback powered by Claude API. Covers ML Engineer and Da
 pip3 install -r requirements.txt
 python3 -m streamlit run app.py
 ```
+# 🎯 AI Interview Coach
+
+Real-time ML interview feedback powered by Claude API. Covers ML Engineer and Data Scientist roles across technical, system design, and behavioural questions.
+
+* **Python 3.10+** — core language
+* **Streamlit** — frontend dashboard UI
+* **Anthropic Claude API** — LLM evaluation layer
+* **Requests** — synchronous endpoint handler
+
+---
+
+## 🚀 How to Run
+
+```bash
+# 1. Clone the repository
+git clone [https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git](https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git)
+cd Ai-interview-Coach
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the pipeline dashboard
+python -m streamlit run app.py
