@@ -1,2 +1,15 @@
-# Ai-interview-Coach
-AI Interview Coach is a web app powered by Claude 3.5 Sonnet that simulates technical ML interviews, asking curated questions and scoring answers in real time on structure, depth, examples, and communication. It provides brutal, senior-level feedback, identifies critical gaps, and tracks performance over time.
+# 🎯 AI Interview Coach
+
+Real-time ML interview feedback powered by Claude API. Covers ML Engineer and Data Scientist roles across technical, system design, and behavioural questions.
+
+## What it does
+- Random question generator across 30+ real interview questions
+- Claude evaluates your answer on 4 criteria: Structure, Depth, Examples, Communication
+- Hire/No-hire decision with specific gap analysis
+- Performance dashboard tracking improvement over time
+
+## Run locally
+```bash
+pip3 install -r requirements.txt
+python3 -m streamlit run app.py
+```
