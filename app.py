@@ -1,3 +1,5 @@
+import csv
+import io
 import json
 import os
 import random
@@ -306,6 +308,38 @@ with dashboard_tab:
     if not history:
         st.info("Complete a practice question to see your session history.")
     else:
+        output = io.StringIO(newline="")
+        columns = [
+            "role",
+            "question",
+            "structure_score",
+            "depth_score",
+            "examples_score",
+            "communication_score",
+            "weighted_score",
+            "practice_decision",
+        ]
+        writer = csv.DictWriter(output, fieldnames=columns)
+        writer.writeheader()
+        for item in history:
+            scores_for_item = item["scores"]
+            writer.writerow({
+                "role": item["role"],
+                "question": item["question"],
+                "structure_score": scores_for_item["structure_score"],
+                "depth_score": scores_for_item["depth_score"],
+                "examples_score": scores_for_item["examples_score"],
+                "communication_score": scores_for_item["communication_score"],
+                "weighted_score": scores_for_item["overall_score"],
+                "practice_decision": scores_for_item["hire_decision"],
+            })
+        st.download_button(
+            "Download session report (CSV)",
+            data=output.getvalue(),
+            file_name="interview_practice_history.csv",
+            mime="text/csv",
+        )
+
         scores = [item["scores"]["overall_score"] for item in history]
         first, second, third = st.columns(3)
         first.metric("Answers submitted", len(history))
