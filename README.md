@@ -10,6 +10,7 @@ This is a learning project. The scores and practice decision are not a validated
 - Feedback on structure, technical depth, examples, and communication
 - A weighted overall score calculated by the application
 - A short history held in the current Streamlit session
+- CSV download of session scores and questions (answer text is not included)
 
 ## Requirements
 
@@ -49,6 +50,7 @@ For Streamlit Community Cloud, add `ANTHROPIC_API_KEY` in the app's Secrets sett
 3. The app sends the question and answer to Anthropic.
 4. The app parses the response, checks its fields and score ranges, and calculates the weighted score locally.
 5. Feedback and recent scores are displayed in the browser session.
+6. Optionally download the session score report as a CSV file.
 
 ## Data and limitations
 
