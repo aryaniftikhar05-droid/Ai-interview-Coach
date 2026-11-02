@@ -1,74 +1,62 @@
-# 🎯 AI Interview Coach
+# AI Interview Coach
 
-A reproducible, production-ready Streamlit application powered by Claude 3.5 Sonnet to simulate senior-level technical, system design, and behavioral interviews — built as a professional portfolio development asset.
-   
-📌 Project Overview
+A small Streamlit project for practising machine learning engineer and data scientist interview questions. It sends an answer to the Anthropic Messages API and displays model-generated feedback.
 
-Most technical candidates fail machine learning and data science interview loops not due to a lack of core technical theory, but because they struggle to articulate complex concepts structurally under pressure. 
+This is a learning project. The scores and practice decision are not a validated hiring assessment and should not be treated as a real prediction.
 
-This application provides an end-to-end simulated mock interview dashboard. It prompts the user with curated, high-frequency industry questions and runs comprehensive real-time evaluations across standard engineering competency metrics. By processing input text via strict prompt-engineered grading matrices, it outputs an instant scorecard, a definitive hiring decision, an explicit critique of critical gaps, and target model-answer hints.
+## Features
 
-🗂️ Repository Structure
+- Technical, system design, case study, and behavioural question categories
+- Feedback on structure, technical depth, examples, and communication
+- A weighted overall score calculated by the application
+- A short history held in the current Streamlit session
 
-Ai-interview-Coach/
-│
-├── .streamlit/
-│   └── secrets.toml             ← Local API credentials configuration (git-ignored)
-│
-├── app.py                       ← Main Streamlit application and UI layout engine
-├── requirements.txt             ← Python library production dependencies
-└── README.md                    ← Interactive documentation and setup playbook
+## Requirements
 
-🔍 Evaluation Criteria & Grading Matrix
+- Python 3.10 or later
+- An Anthropic API key
 
-CompetencyWeightAssessment FocusTarget Rubric Standard**Structure**25%Logical conversational flow (STAR framework / problem context → solution design)Linear, clear, scannable delivery**Depth**30%Technical accuracy, architectural viability, framework knowledgeDeep domain-specific trade-off analysis**Examples**25%Integration of concrete metrics, production constraints, or hard numbersData-backed claim validation**Communication**20%Brevity, concise phrasing, vocabulary precision, conceptual clarityC-level executive level crispness
-⚙️ Application Architecture Pipeline
+## Run locally
 
-1. Select Role      → Choose target discipline (ML Engineer / Data Scientist) and topic track
-2. Fetch Question   → Extract random, industry-vetted question from internal memory arrays
-3. User Submission  → Capture comprehensive, paragraph-length text response from candidate
-4. Length Guardrail → Validate string counts to block thin or low-effort submissions
-5. JSON Formatting  → Inject responses into strict system prompts demanding raw telemetry objects
-6. API Handshake    → Transmit payload securely to the Anthropic Claude 3.5 Sonnet endpoint
-7. Response Parsing → Strip Markdown fences and extract structural feedback metadata safely
-8. UI Render        → Display conditional, color-coded metric panels and tailored critiques
-9. State Caching    → Persist evaluation metrics to persistent log history arrays
+1. Clone the repository and enter the project directory.
+2. Create and activate a virtual environment.
+3. Install dependencies:
 
-📊 Operational Benchmarks
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
 
-Track RoleAvailable ModulesTotal Core QuestionsTarget Hire Threshold**ML Engineer**Technical Theory, System Design, Behavioral19 Production QuestionsScore $\ge$ 7.0 / 10**Data Scientist**Technical Theory, Case Study, Behavioral15 Analytics QuestionsScore $\ge$ 7.0 / 10
+4. Create `.streamlit/secrets.toml` with this content:
 
-🛠️ Tools & Technologies
+   ```toml
+   ANTHROPIC_API_KEY = "your-api-key"
+   ```
 
-* **Python 3.10+** — core language architecture environment
-* **Streamlit** — dashboard interface framework and interactive state controls
-* **Anthropic Claude API** — (`claude-3-5-sonnet`) underlying analytical validation model
-* **Requests** — client-server network protocol communication handler
+   Keep this file private. It is excluded by `.gitignore`. You can instead set an `ANTHROPIC_API_KEY` environment variable.
 
-🚀 How to Run
+5. Start the app:
 
-```bash
-# 1. Clone the repository
-git clone [https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git](https://github.com/aryaniftikhar05-droid/Ai-interview-Coach.git)
-cd Ai-interview-Coach
+   ```bash
+   python -m streamlit run app.py
+   ```
 
-# 2. Install dependencies
-pip install -r requirements.txt
+For Streamlit Community Cloud, add `ANTHROPIC_API_KEY` in the app's Secrets settings. Do not put the key in source code or commit it to GitHub.
 
-# 3. Run the Streamlit dashboard
-python -m streamlit run app.py
+## How it works
 
+1. Choose a role and question category.
+2. Generate a question and write an answer.
+3. The app sends the question and answer to Anthropic.
+4. The app parses the response, checks its fields and score ranges, and calculates the weighted score locally.
+5. Feedback and recent scores are displayed in the browser session.
 
-💡 What I Learned
-LLM Evaluation Matrix: Architecting strict system prompts that force models to reliably output parseable, non-hallucinated structural JSON blocks.
-State Preservation: Leveraging temporary cache protocols (session_state) to manage multi-tab execution flow, history retention, and rolling metric aggregations cleanly.
-API Secret Isolation: Isolating production API tokens securely using environment variable injection blocks to prevent accidental exposures on public repositories.
-UI Customization overrides: Embedding custom CSS classes into boilerplate layouts to build professional, sleek dark-themed dashboards.
+## Data and limitations
 
-📁 Application State Schema
-State VariableTypeDescriptionRuntime Scopecurrent_questionstringTracks the currently active interview prompt displayed to the candidateActive interview loop contextcurrent_rolestringIdentifies the active testing career track configurationGlobal runtime execution pathhistorylistNested dictionary logs storing cumulative answers and API feedback payloadsPerformance history visualizationtotal_scorelistFlat integer array storing historical final grades to compute running dashboard metricsAnalytics computation
+- Answers are sent to Anthropic's API for processing. Do not submit passwords, sensitive personal data, or confidential information.
+- History exists only in Streamlit session state. It is not a database and is not saved permanently.
+- Model feedback can be inaccurate, inconsistent, or biased. The scores and practice decision are prompts for reflection, not objective measurements.
+- The app requires a working API key and internet access. API errors are shown to the user; the app does not substitute a fake score when a request fails.
 
-Author
-Aryan Iftikhar Computer Science Student | Aspiring Machine Learning & Software Engineer
+## Technologies
 
-
+Python, Streamlit, Requests, and the Anthropic Messages API.
