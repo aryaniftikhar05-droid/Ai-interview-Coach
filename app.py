@@ -272,7 +272,6 @@ with practice_tab:
             if new_question:
                 st.session_state.current_question = None
                 st.session_state.latest_feedback = None
-                st.session_state.pop("answer", None)
                 st.rerun()
 
             if submit:
