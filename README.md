@@ -1,12 +1,13 @@
 # AI Interview Coach
 
 [![Tests](https://github.com/aryaniftikhar05-droid/Ai-interview-Coach/actions/workflows/ci.yml/badge.svg)](https://github.com/aryaniftikhar05-droid/Ai-interview-Coach/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB)
-![Streamlit](https://img.shields.io/badge/Streamlit-app-FF4B4B)
-![Claude API](https://img.shields.io/badge/Anthropic-Claude%20API-D97757)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-app-FF4B4B)](https://streamlit.io/)
+[![Claude API](https://img.shields.io/badge/Anthropic-Claude%20API-D97757)](https://docs.claude.com/)
 
-<!-- Add your live Streamlit Community Cloud link on the next line -->
-**Live demo:** _add link_
+<!-- After deploying on Streamlit Community Cloud, add: **Live demo:** https://YOUR-APP.streamlit.app -->
+**Run it yourself:** see [Run locally](#run-locally) (about 2 minutes) or
+[Deploy on Streamlit Community Cloud](#deploy-on-streamlit-community-cloud).
 
 A Streamlit app for practising machine learning engineer and data scientist
 interview questions. You answer a question, Claude scores it against a rubric,
@@ -87,8 +88,12 @@ python -m streamlit run app.py
 python -m pytest -q        # run the tests
 ```
 
-For Streamlit Community Cloud, add `ANTHROPIC_API_KEY` in the app's Secrets
-settings. Never put the key in source code.
+## Deploy on Streamlit Community Cloud
+
+1. Sign in at [share.streamlit.io](https://share.streamlit.io) with GitHub.
+2. Select **Create app**, choose this repository, branch `main`, file `app.py`.
+3. Open **Advanced settings → Secrets** and add `ANTHROPIC_API_KEY = "your-api-key"`.
+4. Select **Deploy**. Never put the key in source code.
 
 ## Data and limitations
 
