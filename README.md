@@ -18,6 +18,13 @@ follow-up question a real interviewer would ask next.
 
 ## Features
 
+- **Free demo mode, no API key needed**: without a key the app gives
+  rule-based feedback (structure, examples, numbers, clarity), so anyone can
+  try it at no cost. It is clearly labelled as demo feedback, not AI
+- **Bring your own key**: paste an Anthropic API key in the sidebar for real
+  Claude feedback. The key lives only in that browser session and is billed to
+  its owner, so a public demo never spends the author's credit
+
 - 34 questions across Technical, System Design, Case Study and Behavioural
   categories, or paste your own question from a real job advert
 - Rubric scores for structure, technical depth, examples and communication
@@ -40,6 +47,11 @@ follow-up question a real interviewer would ask next.
 - **Tested without network calls.** The HTTP function is injected, so tests use
   a fake API to check the request shape, validation and error handling (401,
   429, 5xx, timeouts). A Streamlit `AppTest` smoke test loads the full app.
+- **Cost-safe public demo.** A deployed demo with the author's key would let
+  any visitor spend that credit. Demo mode plus bring-your-own-key keeps the
+  live app free to run while still showing the real AI pipeline.
+- **Clear API errors.** Anthropic's own error reason (no credit, unknown
+  model, invalid key) is shown instead of a generic failure.
 - **Safe defaults.** Clear user-facing errors, no fake score when a request
   fails, secrets kept out of the repo, and CSV cells protected against
   spreadsheet formula injection.
@@ -66,7 +78,8 @@ tests/               Unit tests and an app smoke test (pytest)
 
 ## Run locally
 
-Requires Python 3.10+ and an Anthropic API key.
+Requires Python 3.10+. An Anthropic API key is optional: without one the app
+runs in free demo mode.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -92,8 +105,11 @@ python -m pytest -q        # run the tests
 
 1. Sign in at [share.streamlit.io](https://share.streamlit.io) with GitHub.
 2. Select **Create app**, choose this repository, branch `main`, file `app.py`.
-3. Open **Advanced settings → Secrets** and add `ANTHROPIC_API_KEY = "your-api-key"`.
-4. Select **Deploy**. Never put the key in source code.
+3. Select **Deploy**. No secrets are needed: the app starts in free demo mode
+   and visitors can paste their own key in the sidebar.
+4. Optional: to give every visitor AI feedback on your bill, add
+   `ANTHROPIC_API_KEY = "your-api-key"` under **Advanced settings → Secrets**.
+   Never put the key in source code.
 
 ## Data and limitations
 

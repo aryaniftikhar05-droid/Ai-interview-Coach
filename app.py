@@ -3,6 +3,7 @@ import random
 
 import streamlit as st
 
+from coach.demo import demo_feedback
 from coach.feedback import CoachError, evaluate_answer
 from coach.questions import QUESTION_BANK
 from coach.report import history_to_csv
@@ -21,9 +22,10 @@ def get_secret(name):
     return value.strip() if isinstance(value, str) else value
 
 
-def set_question(question, role, is_follow_up=False):
+def set_question(question, role, is_follow_up=False, category=None):
     st.session_state.current_question = question
     st.session_state.current_role = role
+    st.session_state.current_category = category
     st.session_state.is_follow_up = is_follow_up
     st.session_state.latest_feedback = None
     st.session_state.pop("answer", None)
@@ -42,8 +44,9 @@ def render_feedback(result):
     for column, (label, key) in zip(columns, labels):
         column.metric(label, f"{result[key]:g}/10")
 
+    source = "Demo (rule-based)" if result.get("mode") == "demo" else "Claude"
     st.caption(
-        f"Model-generated practice decision: {result['hire_decision']}. "
+        f"{source} practice decision: {result['hire_decision']}. "
         "This is not a real hiring prediction."
     )
     st.markdown("**What went well**")
@@ -55,20 +58,51 @@ def render_feedback(result):
     st.markdown("**Likely follow-up question**")
     st.write(result["follow_up_question"])
     if st.button("Answer this follow-up", key="follow_up"):
-        set_question(result["follow_up_question"], st.session_state.current_role, True)
+        set_question(
+            result["follow_up_question"], st.session_state.current_role, True,
+            st.session_state.get("current_category"),
+        )
         st.rerun()
 
 
 st.title("🎯 AI Interview Coach")
 st.caption("Practice ML Engineer and Data Scientist interview answers with AI feedback.")
-st.info(
-    "Your answer is sent to Anthropic to generate feedback. Do not enter passwords, "
-    "private personal information, or confidential material."
-)
+with st.sidebar:
+    st.header("Feedback mode")
+    user_key = st.text_input(
+        "Your Anthropic API key (optional)",
+        type="password",
+        help="Used only for this browser session. It is never stored or logged.",
+        placeholder="sk-ant-...",
+    ).strip()
+    api_key = user_key or get_secret("ANTHROPIC_API_KEY")
+    if api_key:
+        st.success("AI mode: Claude gives the feedback.")
+    else:
+        st.info(
+            "Free demo mode: feedback comes from simple rules (structure, examples, "
+            "numbers, clarity), not AI. Add an API key for real Claude feedback."
+        )
+    st.caption(
+        "Get a key at [console.anthropic.com](https://console.anthropic.com). "
+        "Requests are billed to the key's owner."
+    )
+
+if api_key:
+    st.info(
+        "Your answer is sent to Anthropic to generate feedback. Do not enter passwords, "
+        "private personal information, or confidential material."
+    )
+else:
+    st.info(
+        "Demo mode: no API key is set, so feedback is rule-based and free. "
+        "Your answer stays in this session. Open the sidebar to add a key for AI feedback."
+    )
 
 for key, default in (
     ("current_question", None),
     ("current_role", "ML Engineer"),
+    ("current_category", None),
     ("is_follow_up", False),
     ("history", []),
     ("latest_feedback", None),
@@ -84,7 +118,7 @@ with practice_tab:
         role = st.selectbox("Target role", list(QUESTION_BANK))
         category = st.selectbox("Question type", list(QUESTION_BANK[role]))
         if st.button("Get a random question", type="primary", use_container_width=True):
-            set_question(random.choice(QUESTION_BANK[role][category]), role)
+            set_question(random.choice(QUESTION_BANK[role][category]), role, category=category)
 
         with st.expander("Use your own question"):
             custom = st.text_area(
@@ -127,13 +161,22 @@ with practice_tab:
                 else:
                     with st.spinner("Generating feedback..."):
                         try:
-                            result = evaluate_answer(
-                                st.session_state.current_question,
-                                answer,
-                                st.session_state.current_role,
-                                api_key=get_secret("ANTHROPIC_API_KEY"),
-                                model=get_secret("ANTHROPIC_MODEL"),
-                            )
+                            if api_key:
+                                result = evaluate_answer(
+                                    st.session_state.current_question,
+                                    answer,
+                                    st.session_state.current_role,
+                                    api_key=api_key,
+                                    model=get_secret("ANTHROPIC_MODEL"),
+                                )
+                                result["mode"] = "ai"
+                            else:
+                                result = demo_feedback(
+                                    st.session_state.current_question,
+                                    answer,
+                                    st.session_state.get("current_category"),
+                                )
+                                result["mode"] = "demo"
                             st.session_state.history.append({
                                 "question": st.session_state.current_question,
                                 "scores": result,
