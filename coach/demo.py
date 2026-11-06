@@ -19,7 +19,8 @@ EXAMPLE_WORDS = (
     "for example", "for instance", "in my project", "i built", "i used", "i worked",
     "we built", "we used", "at my", "in a project", "such as", "e.g.",
 )
-FILLER_WORDS = ("basically", "like", "kind of", "sort of", "stuff", "things", "very")
+# "like" is left out on purpose: "models like XGBoost" is normal technical English.
+FILLER_WORDS = ("basically", "kind of", "sort of", "stuff", "things", "you know", "literally")
 
 STOPWORDS = set("""
 a an and are as at be been but by can could did do does for from had has have how
@@ -135,16 +136,7 @@ def demo_feedback(question, answer, category=None):
         "communication_score": "Use short sentences and remove words like 'basically' and 'kind of'.",
     }
 
-    overall = sum(scores.values()) / 4
-    if overall >= 8:
-        decision = "STRONG YES"
-    elif overall >= 6.5:
-        decision = "YES"
-    elif overall >= 5:
-        decision = "BORDERLINE"
-    else:
-        decision = "NO"
-
+    # The practice decision is derived from the weighted score in validate_feedback.
     return validate_feedback({
         **scores,
         "what_was_good": what_was_good,
@@ -158,7 +150,6 @@ def demo_feedback(question, answer, category=None):
             if off_topic else hints[weakest]
         ),
         "follow_up_question": FOLLOW_UPS.get(category, DEFAULT_FOLLOW_UP),
-        "hire_decision": decision,
     })
 
 

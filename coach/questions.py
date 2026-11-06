@@ -1,4 +1,5 @@
 """Built-in interview questions, grouped by role and category."""
+import re
 
 QUESTION_BANK = {
     "ML Engineer": {
@@ -55,6 +56,9 @@ QUESTION_BANK = {
 
 
 # Skills recruiters often list, with the words that show them in a job advert.
+# Terms match whole words (an optional plural "s" is allowed), so "rag" does not
+# match "average" and "aws" does not match "laws". A term ending in "*" matches
+# any word that starts with it, e.g. "forecast*" matches "forecasting".
 SKILLS = {
     "Python": ["python"],
     "SQL": ["sql", "postgres", "bigquery", "snowflake"],
@@ -66,18 +70,18 @@ SKILLS = {
     "Transformers / LLMs": ["transformer", "llm", "large language model", "gpt", "rag", "hugging face", "huggingface"],
     "NLP": ["nlp", "natural language"],
     "Computer vision": ["computer vision", "image classification", "object detection"],
-    "Statistics": ["statistic", "hypothesis test", "p-value", "bayesian", "regression"],
-    "A/B testing": ["a/b test", "ab test", "experiment", "experimentation"],
-    "Recommender systems": ["recommend", "personalisation", "personalization", "ranking"],
-    "Forecasting": ["forecast", "time series", "time-series", "demand"],
-    "Fraud / risk": ["fraud", "risk", "anomaly"],
-    "MLOps": ["mlops", "mlflow", "kubeflow", "model monitoring", "drift", "retrain"],
+    "Statistics": ["statistic*", "hypothesis test", "p-value", "bayesian", "regression"],
+    "A/B testing": ["a/b test*", "ab test*", "experiment*"],
+    "Recommender systems": ["recommend*", "personalisation", "personalization", "ranking"],
+    "Forecasting": ["forecast*", "time series", "time-series", "demand planning"],
+    "Fraud / risk": ["fraud*", "credit risk", "risk model*", "risk scor*", "anomal*"],
+    "MLOps": ["mlops", "mlflow", "kubeflow", "model monitoring", "drift", "retrain*"],
     "a cloud platform (AWS, GCP or Azure)": ["aws", "gcp", "azure", "sagemaker", "vertex"],
-    "Docker / Kubernetes": ["docker", "kubernetes", "k8s", "container"],
+    "Docker / Kubernetes": ["docker", "kubernetes", "k8s", "container*"],
     "Data pipelines": ["airflow", "spark", "etl", "pipeline", "dbt", "kafka"],
     "Feature engineering": ["feature engineering", "feature store"],
-    "Model explainability": ["shap", "explainab", "interpretab"],
-    "Stakeholder communication": ["stakeholder", "communicat", "non-technical", "business partner"],
+    "Model explainability": ["shap", "explainab*", "interpretab*"],
+    "Stakeholder communication": ["stakeholder", "communicat*", "non-technical", "business partner"],
 }
 
 # Which built-in questions each skill relates to (matched by words in the question).
@@ -100,10 +104,24 @@ SKILL_QUESTION_WORDS = {
 MAX_JOB_TEXT = 20_000
 
 
+def _term_pattern(term):
+    if term.endswith("*"):
+        body = re.escape(term[:-1]) + r"[a-z0-9\-]*"
+    else:
+        body = re.escape(term) + r"(?:s|es)?"
+    return r"(?<![a-z0-9])" + body.replace(r"\ ", r"[\s\-]+") + r"(?![a-z0-9])"
+
+
+SKILL_PATTERNS = {
+    skill: re.compile("|".join(_term_pattern(t) for t in terms))
+    for skill, terms in SKILLS.items()
+}
+
+
 def skills_in_job_advert(text):
     """Return the skills mentioned in a job advert, in a stable order."""
     lowered = text.lower()[:MAX_JOB_TEXT]
-    return [skill for skill, terms in SKILLS.items() if any(t in lowered for t in terms)]
+    return [skill for skill, pattern in SKILL_PATTERNS.items() if pattern.search(lowered)]
 
 
 def _all_questions():

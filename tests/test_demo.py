@@ -101,3 +101,31 @@ def test_checklist_reflects_answer_quality():
     weak = answer_checklist(question, WEAK)
     assert all(strong.values())
     assert sum(ok for _, ok in weak) <= 1
+
+
+def test_job_advert_matches_whole_words_only():
+    from coach.questions import skills_in_job_advert
+    # "rag" is inside "average", "aws" inside "laws", "demand" inside "demanding".
+    assert skills_in_job_advert(
+        "We leverage storage to average data, comply with laws and keep a demanding, "
+        "asterisk-free schedule."
+    ) == []
+    found = set(skills_in_job_advert(
+        "RAG and LLMs on AWS; A/B tests, pipelines, forecasting, containers, statistical models."
+    ))
+    assert {"Transformers / LLMs", "a cloud platform (AWS, GCP or Azure)", "A/B testing",
+            "Data pipelines", "Forecasting", "Docker / Kubernetes", "Statistics"} <= found
+
+
+def test_like_is_not_counted_as_a_filler_word():
+    plain = "Boosted trees such as XGBoost fit residuals step by step and handle missing values well."
+    with_like = plain.replace("such as", "like")
+    assert demo_feedback("Q?", with_like)["communication_score"] == \
+        demo_feedback("Q?", plain)["communication_score"]
+
+
+def test_demo_decision_matches_weighted_score():
+    from coach.feedback import decision_for
+    for answer in (WEAK, STRONG):
+        result = demo_feedback("Q?", answer)
+        assert result["hire_decision"] == decision_for(result["overall_score"])

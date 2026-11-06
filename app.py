@@ -4,7 +4,7 @@ import random
 import streamlit as st
 
 from coach.demo import answer_checklist, demo_feedback
-from coach.feedback import CoachError, evaluate_answer
+from coach.feedback import MAX_ANSWER_CHARS, CoachError, evaluate_answer
 from coach.questions import QUESTION_BANK, questions_for_job, skills_in_job_advert
 from coach.report import history_to_csv
 
@@ -184,6 +184,11 @@ with practice_tab:
             if submit:
                 if len(answer.split()) < 10:
                     st.warning("Please write at least 10 words so there is enough to evaluate.")
+                elif len(answer) > MAX_ANSWER_CHARS:
+                    st.warning(
+                        f"Your answer is {len(answer):,} characters. Keep it under "
+                        f"{MAX_ANSWER_CHARS:,}, about 900 words, as you would in a real interview."
+                    )
                 else:
                     with st.spinner("Generating feedback..."):
                         try:
