@@ -25,6 +25,14 @@ follow-up question a real interviewer would ask next.
   Claude feedback. The key lives only in that browser session and is billed to
   its owner, so a public demo never spends the author's credit
 
+- **Practise for a real job advert**: paste a job description, the app finds
+  the skills it asks for (Python, SQL, XGBoost, A/B testing, MLOps...) and
+  picks one practice question per skill
+- **Live answer checklist**: before you submit, ticks show whether the answer
+  has enough detail, a clear order, a concrete example, a number and the key
+  words of the question
+- **Off-topic detection**: in demo mode, an answer that ignores the question
+  cannot score well just by being long
 - 34 questions across Technical, System Design, Case Study and Behavioural
   categories, or paste your own question from a real job advert
 - Rubric scores for structure, technical depth, examples and communication

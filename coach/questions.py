@@ -52,3 +52,91 @@ QUESTION_BANK = {
         ],
     },
 }
+
+
+# Skills recruiters often list, with the words that show them in a job advert.
+SKILLS = {
+    "Python": ["python"],
+    "SQL": ["sql", "postgres", "bigquery", "snowflake"],
+    "PyTorch": ["pytorch", "torch"],
+    "TensorFlow": ["tensorflow", "keras"],
+    "scikit-learn": ["scikit-learn", "sklearn", "scikit"],
+    "Gradient boosting": ["xgboost", "lightgbm", "catboost", "gradient boosting"],
+    "Deep learning": ["deep learning", "neural network", "cnn", "rnn"],
+    "Transformers / LLMs": ["transformer", "llm", "large language model", "gpt", "rag", "hugging face", "huggingface"],
+    "NLP": ["nlp", "natural language"],
+    "Computer vision": ["computer vision", "image classification", "object detection"],
+    "Statistics": ["statistic", "hypothesis test", "p-value", "bayesian", "regression"],
+    "A/B testing": ["a/b test", "ab test", "experiment", "experimentation"],
+    "Recommender systems": ["recommend", "personalisation", "personalization", "ranking"],
+    "Forecasting": ["forecast", "time series", "time-series", "demand"],
+    "Fraud / risk": ["fraud", "risk", "anomaly"],
+    "MLOps": ["mlops", "mlflow", "kubeflow", "model monitoring", "drift", "retrain"],
+    "a cloud platform (AWS, GCP or Azure)": ["aws", "gcp", "azure", "sagemaker", "vertex"],
+    "Docker / Kubernetes": ["docker", "kubernetes", "k8s", "container"],
+    "Data pipelines": ["airflow", "spark", "etl", "pipeline", "dbt", "kafka"],
+    "Feature engineering": ["feature engineering", "feature store"],
+    "Model explainability": ["shap", "explainab", "interpretab"],
+    "Stakeholder communication": ["stakeholder", "communicat", "non-technical", "business partner"],
+}
+
+# Which built-in questions each skill relates to (matched by words in the question).
+SKILL_QUESTION_WORDS = {
+    "Gradient boosting": ["gradient boosting", "bagging", "boosting"],
+    "Transformers / LLMs": ["attention", "transformer", "rlhf", "language model"],
+    "Statistics": ["p-value", "correlation", "parametric", "cross-validation"],
+    "A/B testing": ["a/b test", "experiment"],
+    "Recommender systems": ["recommendation"],
+    "Fraud / risk": ["fraud", "imbalanced"],
+    "MLOps": ["retrains", "accuracy drops", "deploy"],
+    "Feature engineering": ["feature store", "dimensionality", "missing values"],
+    "Model explainability": ["shap"],
+    "Stakeholder communication": ["non-technical", "stakeholder", "business leaders"],
+    "Data pipelines": ["pipeline", "10 million"],
+    "Python": ["limited ram", "data leakage"],
+    "scikit-learn": ["regularisation", "cross-validation", "precision vs recall"],
+}
+
+MAX_JOB_TEXT = 20_000
+
+
+def skills_in_job_advert(text):
+    """Return the skills mentioned in a job advert, in a stable order."""
+    lowered = text.lower()[:MAX_JOB_TEXT]
+    return [skill for skill, terms in SKILLS.items() if any(t in lowered for t in terms)]
+
+
+def _all_questions():
+    for role, categories in QUESTION_BANK.items():
+        for category, questions in categories.items():
+            for question in questions:
+                yield question, role, category
+
+
+def questions_for_job(text, limit=8):
+    """Pick practice questions that match a pasted job advert.
+
+    Returns (question, role, category, reason) tuples: one question per skill
+    found. A built-in question is used when one fits (words listed first win);
+    otherwise the skill gets a question about the candidate's own project.
+    """
+    picked, seen = [], set()
+    for skill in skills_in_job_advert(text):
+        match = None
+        for word in SKILL_QUESTION_WORDS.get(skill, []):
+            match = next(
+                (item for item in _all_questions()
+                 if word in item[0].lower() and item[0] not in seen),
+                None,
+            )
+            if match:
+                break
+        if match is None:
+            match = (
+                f"Tell me about a project where you used {skill}. "
+                "What problem did it solve and what was the result?",
+                "ML Engineer", "Behavioural",
+            )
+        seen.add(match[0])
+        picked.append((*match, f"Matches: {skill}"))
+    return picked[:limit]

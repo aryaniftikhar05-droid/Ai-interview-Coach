@@ -50,3 +50,54 @@ def test_app_gives_demo_feedback_without_a_key(monkeypatch):
     assert not app.error
     assert app.session_state.latest_feedback["mode"] == "demo"
     assert len(app.session_state.history) == 1
+
+
+def test_off_topic_answer_is_capped():
+    question = "How do you handle class imbalance when evaluating a fraud model?"
+    on_topic = demo_feedback(question, STRONG)
+    off_topic = demo_feedback("What is RLHF and why does it matter for LLMs?", STRONG)
+    assert off_topic["depth_score"] <= 3
+    assert "does not seem to address" in off_topic["critical_gap"]
+    assert on_topic["overall_score"] > off_topic["overall_score"]
+
+
+def test_relevance_matches_word_forms():
+    from coach.demo import relevance
+    assert relevance("Explain overfitting in models", "My model was overfitting, so I...") == 1.0
+
+
+JOB = (
+    "ML Engineer. Requirements: Python, SQL, XGBoost, Docker, AWS, A/B testing, "
+    "model monitoring for drift, and explaining results to non-technical stakeholders."
+)
+
+
+def test_job_advert_skills_and_questions():
+    from coach.questions import questions_for_job, skills_in_job_advert
+    skills = skills_in_job_advert(JOB)
+    assert {"Python", "SQL", "Gradient boosting", "A/B testing"} <= set(skills)
+    picks = questions_for_job(JOB)
+    questions = [p[0] for p in picks]
+    assert len(questions) == len(set(questions))  # no duplicates
+    assert any("gradient boosting" in q.lower() for q in questions)
+    assert any("SQL" in q for q in questions)  # skill without a bank question
+    assert skills_in_job_advert("We sell shoes and need a cashier.") == []
+
+
+def test_app_job_advert_flow():
+    app = AppTest.from_file(
+        str(Path(__file__).resolve().parents[1] / "app.py"), default_timeout=30
+    ).run()
+    app.text_area(key="job_text").input(JOB).run()
+    next(b for b in app.button if b.key == "job_q_0").click().run()
+    assert not app.exception
+    assert app.session_state.current_question
+
+
+def test_checklist_reflects_answer_quality():
+    from coach.demo import answer_checklist
+    question = "How do you handle class imbalance when evaluating a fraud model?"
+    strong = dict((label.split(" (")[0], ok) for label, ok in answer_checklist(question, STRONG))
+    weak = answer_checklist(question, WEAK)
+    assert all(strong.values())
+    assert sum(ok for _, ok in weak) <= 1

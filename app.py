@@ -3,9 +3,9 @@ import random
 
 import streamlit as st
 
-from coach.demo import demo_feedback
+from coach.demo import answer_checklist, demo_feedback
 from coach.feedback import CoachError, evaluate_answer
-from coach.questions import QUESTION_BANK
+from coach.questions import QUESTION_BANK, questions_for_job, skills_in_job_advert
 from coach.report import history_to_csv
 
 st.set_page_config(page_title="AI Interview Coach", page_icon="🎯", layout="wide")
@@ -120,6 +120,27 @@ with practice_tab:
         if st.button("Get a random question", type="primary", use_container_width=True):
             set_question(random.choice(QUESTION_BANK[role][category]), role, category=category)
 
+        with st.expander("Practise for a job advert"):
+            job_text = st.text_area(
+                "Paste the job description",
+                key="job_text",
+                height=140,
+                placeholder="Paste the requirements section of a real job advert...",
+            )
+            if job_text.strip():
+                skills = skills_in_job_advert(job_text)
+                if not skills:
+                    st.caption("No familiar ML or data skills found. Try pasting the requirements section.")
+                else:
+                    st.caption("Skills found: " + ", ".join(skills))
+                    for index, (question, q_role, q_category, reason) in enumerate(
+                        questions_for_job(job_text)
+                    ):
+                        st.markdown(f"**{reason}**  \n{question}")
+                        if st.button("Practise this", key=f"job_q_{index}"):
+                            set_question(question, q_role, category=q_category)
+                            st.rerun()
+
         with st.expander("Use your own question"):
             custom = st.text_area(
                 "Paste a question from a real job advert or past interview",
@@ -146,6 +167,11 @@ with practice_tab:
                     "situation, your action, and the result."
                 ),
             )
+            if answer.strip():
+                checks = answer_checklist(st.session_state.current_question, answer)
+                st.caption(
+                    "  ·  ".join(f"{'✅' if ok else '⬜'} {label}" for label, ok in checks)
+                )
             submit_column, new_column = st.columns(2)
             submit = submit_column.button(
                 "Submit for feedback", type="primary", use_container_width=True
