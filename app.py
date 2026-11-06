@@ -16,7 +16,9 @@ def get_secret(name):
         value = st.secrets.get(name)
     except (FileNotFoundError, KeyError):
         value = None
-    return value or os.getenv(name)
+    value = value or os.getenv(name)
+    # Pasted keys often carry stray spaces or newlines, which the API rejects.
+    return value.strip() if isinstance(value, str) else value
 
 
 def set_question(question, role, is_follow_up=False):
