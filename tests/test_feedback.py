@@ -102,3 +102,14 @@ def test_timeout_is_reported():
         raise requests.Timeout()
     with pytest.raises(CoachError, match="timed out"):
         evaluate_answer("Q?", "A", "ML Engineer", api_key="k", post=post)
+
+
+@pytest.mark.parametrize("message,expected", [
+    ("Your credit balance is too low to access the Anthropic API.", "no API credit"),
+    ("model: claude-x not found", "model could not be used"),
+    ("Something else went wrong", "Something else went wrong"),
+])
+def test_api_error_detail_is_shown(message, expected):
+    payload = {"type": "error", "error": {"type": "invalid_request_error", "message": message}}
+    with pytest.raises(CoachError, match=expected):
+        evaluate_answer("Q", "A", "ML Engineer", api_key="k", post=fake_post(payload, status=400))

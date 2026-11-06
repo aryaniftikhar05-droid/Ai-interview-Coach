@@ -68,6 +68,14 @@ Be specific to the candidate's actual answer. Do not reward length on its own.
 Submit your feedback with the submit_feedback tool."""
 
 
+def _api_error_message(response):
+    """Return Anthropic's error message from a failed response, if there is one."""
+    try:
+        return str(response.json().get("error", {}).get("message", "")).strip()
+    except Exception:
+        return ""
+
+
 def request_feedback(question, answer, role, api_key, model=None, post=requests.post):
     """Call the Messages API and return the raw tool input (a dict)."""
     if not api_key:
@@ -108,7 +116,19 @@ def request_feedback(question, answer, role, api_key, model=None, post=requests.
             raise CoachError("The API key was rejected. Check ANTHROPIC_API_KEY.") from exc
         if status == 429:
             raise CoachError("Rate limit reached. Wait a moment and try again.") from exc
-        raise CoachError("The Anthropic API returned an error. Please try again.") from exc
+        detail = _api_error_message(exc.response)
+        if "credit balance" in detail.lower():
+            raise CoachError(
+                "Your Anthropic account has no API credit. Add credit under "
+                "Billing in the Anthropic Console, then try again."
+            ) from exc
+        if status == 404 or "model" in detail.lower():
+            raise CoachError(
+                f"The model could not be used ({detail}). Set ANTHROPIC_MODEL "
+                "to a model your account can access."
+            ) from exc
+        suffix = f": {detail}" if detail else ""
+        raise CoachError(f"The Anthropic API returned an error (HTTP {status}){suffix}") from exc
     except requests.RequestException as exc:
         raise CoachError(
             "Could not reach the Anthropic API. Check your connection and API settings."
