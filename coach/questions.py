@@ -131,6 +131,20 @@ def _all_questions():
                 yield question, role, category
 
 
+def search_questions(query):
+    """Find built-in questions containing every search word, ignoring case.
+
+    Search the question, role and category together. A blank query returns
+    the full bank in its original order.
+    """
+    terms = query.casefold().split()
+    return [
+        (question, role, category)
+        for question, role, category in _all_questions()
+        if all(term in f"{question} {role} {category}".casefold() for term in terms)
+    ]
+
+
 def questions_for_job(text, limit=8):
     """Pick practice questions that match a pasted job advert.
 

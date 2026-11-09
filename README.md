@@ -36,6 +36,8 @@ follow-up question a real interviewer would ask next.
   cannot score well just by being long
 - 34 questions across Technical, System Design, Case Study and Behavioural
   categories, or paste your own question from a real job advert
+- **Searchable question bank**: find a built-in question by topic, role or
+  question type, then select it for practice without copying and pasting
 - Rubric scores for structure, technical depth, examples and communication
 - **Follow-up questions**: answer the interviewer's next question in one click,
   like a real interview loop
@@ -43,6 +45,20 @@ follow-up question a real interviewer would ask next.
   the model, so a 3/10 answer can never be labelled "STRONG YES"
 - Progress tab with a per-criterion chart for the session
 - CSV export of scores (answer text is never exported)
+
+## Choose a question to practise
+
+1. Open **Question bank** and use **Search questions** to narrow the list
+   (for example, `boosting`, `Data Scientist` or `Behavioural`). Search ignores
+   case and matches every search word across the question, role and question
+   type. Clear the search to see the full bank again.
+2. Click **Practise this question** beside a result, then open **Practice**.
+   This starts a fresh answer with that question's role and category, replacing
+   any unfinished answer and clearing the previous feedback. Completed attempts
+   remain in the session history.
+3. Write your answer and select **Submit for feedback** as usual. Searching or
+   selecting a question makes no API call; search text is not sent to Anthropic
+   or included in the CSV report.
 
 ## Engineering decisions
 
@@ -90,7 +106,7 @@ flowchart LR
 app.py               Streamlit interface
 coach/feedback.py    API request, tool schema, validation, scoring
 coach/demo.py        Free rule-based feedback and the live answer checklist
-coach/questions.py   Question bank and job-advert skill matching
+coach/questions.py   Question bank, keyword search and job-advert skill matching
 coach/report.py      CSV export
 tests/               Unit tests and an app smoke test (pytest)
 ```

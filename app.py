@@ -5,7 +5,7 @@ import streamlit as st
 
 from coach.demo import answer_checklist, demo_feedback
 from coach.feedback import MAX_ANSWER_CHARS, CoachError, evaluate_answer
-from coach.questions import QUESTION_BANK, questions_for_job, skills_in_job_advert
+from coach.questions import QUESTION_BANK, questions_for_job, search_questions, skills_in_job_advert
 from coach.report import history_to_csv
 
 st.set_page_config(page_title="AI Interview Coach", page_icon="🎯", layout="wide")
@@ -264,9 +264,36 @@ with dashboard_tab:
 
 with bank_tab:
     st.subheader("Question bank")
+    search = st.text_input(
+        "Search questions",
+        key="question_bank_search",
+        placeholder="Try boosting, data scientist, or behavioural...",
+        help="Matches every search word across the question, role and question type, ignoring case.",
+    )
+    matches = search_questions(search)
+    st.caption(
+        f"{len(matches)} questions found. Selecting one starts a fresh answer in Practice "
+        "and replaces any unfinished answer."
+    )
+    if not matches:
+        st.info("No questions match. Try fewer words or clear the search to browse all questions.")
     for role_name, categories in QUESTION_BANK.items():
-        with st.expander(role_name):
+        role_matches = {question for question, role, _ in matches if role == role_name}
+        if not role_matches:
+            continue
+        with st.expander(role_name, expanded=bool(search.strip())):
             for category_name, questions in categories.items():
+                matching_questions = [question for question in questions if question in role_matches]
+                if not matching_questions:
+                    continue
                 st.markdown(f"**{category_name}**")
-                for question in questions:
+                for question in matching_questions:
                     st.write(f"• {question}")
+                    if st.button(
+                        "Practise this question",
+                        key=f"bank_{role_name}_{category_name}_{question}",
+                        on_click=set_question,
+                        args=(question, role_name),
+                        kwargs={"category": category_name},
+                    ):
+                        st.success("Question ready. Open the Practice tab to answer.")
