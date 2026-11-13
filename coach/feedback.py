@@ -17,6 +17,8 @@ DEFAULT_MODEL = "claude-sonnet-5-5"
 TIMEOUT_SECONDS = 45
 # Long answers cost more and rarely help: a spoken answer is about 300-600 words.
 MAX_ANSWER_CHARS = 6000
+# A custom question is user text too, so it needs its own limit to bound cost.
+MAX_QUESTION_CHARS = 1000
 # Temporary failures worth one more try: rate limit, server error, overloaded.
 RETRY_STATUSES = {429, 500, 502, 503, 504, 529}
 MAX_RETRY_WAIT_SECONDS = 8
@@ -127,6 +129,11 @@ def request_feedback(question, answer, role, api_key, model=None, post=requests.
         raise CoachError(
             "Anthropic API key not found. Add ANTHROPIC_API_KEY to "
             ".streamlit/secrets.toml or your environment."
+        )
+    if len(question) > MAX_QUESTION_CHARS:
+        raise CoachError(
+            f"The question is too long ({len(question):,} characters). "
+            f"Keep it under {MAX_QUESTION_CHARS:,} characters."
         )
     if len(answer) > MAX_ANSWER_CHARS:
         raise CoachError(
