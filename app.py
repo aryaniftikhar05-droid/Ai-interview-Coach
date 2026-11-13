@@ -4,8 +4,9 @@ import random
 import streamlit as st
 
 from coach.demo import answer_checklist, demo_feedback
-from coach.feedback import MAX_ANSWER_CHARS, CoachError, evaluate_answer
+from coach.feedback import MAX_ANSWER_CHARS, MAX_QUESTION_CHARS, CoachError, evaluate_answer
 from coach.questions import QUESTION_BANK, questions_for_job, search_questions, skills_in_job_advert
+from coach.ratelimit import RateLimiter
 from coach.report import history_to_csv
 
 st.set_page_config(page_title="AI Interview Coach", page_icon="🎯", layout="wide")
@@ -20,6 +21,20 @@ def get_secret(name):
     value = value or os.getenv(name)
     # Pasted keys often carry stray spaces or newlines, which the API rejects.
     return value.strip() if isinstance(value, str) else value
+
+
+@st.cache_resource
+def shared_key_limiter():
+    """One limiter for the whole server, shared by every visitor.
+
+    It only applies to the owner's key from secrets. Visitors who bring their
+    own key pay for their own requests, so they are not limited here.
+    """
+    try:
+        limit = int(get_secret("SHARED_KEY_HOURLY_LIMIT") or 30)
+    except ValueError:
+        limit = 30
+    return RateLimiter(max_calls=limit, window_seconds=3600)
 
 
 def set_question(question, role, is_follow_up=False, category=None):
@@ -150,6 +165,8 @@ with practice_tab:
             if st.button("Practise this question", use_container_width=True):
                 if len(custom.split()) < 4:
                     st.warning("Please enter a full question.")
+                elif len(custom.strip()) > MAX_QUESTION_CHARS:
+                    st.warning(f"Keep the question under {MAX_QUESTION_CHARS:,} characters.")
                 else:
                     set_question(custom.strip(), role)
 
@@ -188,6 +205,11 @@ with practice_tab:
                     st.warning(
                         f"Your answer is {len(answer):,} characters. Keep it under "
                         f"{MAX_ANSWER_CHARS:,}, about 900 words, as you would in a real interview."
+                    )
+                elif api_key and not user_key and not shared_key_limiter().allow():
+                    st.warning(
+                        "The shared demo key has reached its hourly limit. Try again "
+                        "later, or add your own API key in the sidebar."
                     )
                 else:
                     with st.spinner("Generating feedback..."):

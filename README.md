@@ -76,6 +76,8 @@ follow-up question a real interviewer would ask next.
 - **Retries and limits.** A rate-limited or overloaded request (429, 5xx, 529)
   is retried once, honouring `retry-after`. Answers over 6,000 characters are
   rejected before any API call, so one paste cannot run up a large bill.
+  Custom questions are capped too, and if the owner's key is used it is
+  limited to 30 requests an hour across all visitors (`SHARED_KEY_HOURLY_LIMIT`).
 - **Separation of concerns.** `coach/` holds the logic and has no Streamlit
   imports, so it can be unit-tested; `app.py` is only the interface.
 - **Tested without network calls.** The HTTP function is injected, so tests use
