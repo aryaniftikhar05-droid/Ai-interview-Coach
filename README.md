@@ -32,6 +32,11 @@ follow-up question a real interviewer would ask next.
 - **Live answer checklist**: before you submit, ticks show whether the answer
   has enough detail, a clear order, a concrete example, a number and the key
   words of the question
+- **Answer pacing guide**: while drafting, see a word count and estimated
+  speaking time at 130 words per minute. This is a rough guide that excludes
+  pauses, not an audio recording or a score. It makes no API call and is not
+  stored in history or exported. Like the checklist, it refreshes when Streamlit
+  receives your edited answer (usually when you leave the text field).
 - **Off-topic detection**: in demo mode, an answer that ignores the question
   cannot score well just by being long
 - 34 questions across Technical, System Design, Case Study and Behavioural

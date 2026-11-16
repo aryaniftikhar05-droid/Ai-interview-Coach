@@ -167,6 +167,15 @@ with practice_tab:
                     "situation, your action, and the result."
                 ),
             )
+            word_count = len(answer.split())
+            if word_count:
+                # A rough pacing guide, not a recording or a measured duration.
+                speaking_seconds = max(1, round(word_count * 60 / 130))
+                minutes, seconds = divmod(speaking_seconds, 60)
+                st.caption(
+                    f"{word_count:,} words · Estimated speaking time: "
+                    f"{minutes}:{seconds:02d} at 130 words/minute (pauses not included)."
+                )
             if answer.strip():
                 checks = answer_checklist(st.session_state.current_question, answer)
                 st.caption(
