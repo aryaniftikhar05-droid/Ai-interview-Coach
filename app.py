@@ -269,6 +269,13 @@ with dashboard_tab:
                 f"Weighted score: {item['scores']['overall_score']:.1f}/10 · "
                 f"Practice decision: {item['scores']['hire_decision']}"
             )
+            if st.button(
+                "Practise again",
+                key=f"retry_recent_{len(history) - index}",
+                on_click=set_question,
+                args=(item["question"], item["role"]),
+            ):
+                st.success("Question ready. Open the Practice tab to write a fresh answer.")
     st.caption("History is stored only in this Streamlit session and is not saved permanently.")
 
 with bank_tab:

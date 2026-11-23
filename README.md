@@ -49,6 +49,11 @@ follow-up question a real interviewer would ask next.
 - Weighted overall score and practice decision calculated in the app, not by
   the model, so a 3/10 answer can never be labelled "STRONG YES"
 - Progress tab with a per-criterion chart for the session
+- **Retry recent questions**: use **Practise again** beside one of the last five
+  attempts in Progress, then open Practice to write a fresh answer. This replaces
+  the unfinished draft and clears the displayed feedback while keeping completed
+  attempts in history. Selecting a retry makes no API call; submit the new answer
+  when ready. Retrying does not restore the old answer text or question category.
 - CSV export of scores (answer text is never exported)
 
 ## Choose a question to practise
